@@ -1,8 +1,8 @@
-import { Outlet } from 'react-router-dom'
-import { Navbar } from '../navigation/Navbar'
-import { MobileStickyCTA } from '../navigation/MobileStickyCTA'
-import { Footer } from './Footer'
-import { StructuredData } from '../seo/StructuredData'
+import { Outlet } from "react-router-dom";
+import { Navbar } from "../navigation/Navbar";
+import { MobileStickyCTA } from "../navigation/MobileStickyCTA";
+import { Footer } from "./Footer";
+import { StructuredData } from "../seo/StructuredData";
 
 export function AppShell() {
   return (
@@ -15,5 +15,5 @@ export function AppShell() {
       <Footer />
       <MobileStickyCTA />
     </div>
-  )
+  );
 }

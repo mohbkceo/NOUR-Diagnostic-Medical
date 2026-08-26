@@ -31,12 +31,13 @@ export function Navbar() {
             mx-auto max-w-7xl
             border border-white/40
             bg-white/70
+            
             backdrop-blur-2xl
             supports-[backdrop-filter]:bg-white/55
-            rounded-2xl
+            rounded-[3rem]
           "
         >
-          <div className="flex h-[60px] items-center justify-between px-2 sm:px-3">
+          <div className="flex h-[60px] items-center justify-between rounded-[3rem] p-9 px-2 sm:px-3">
             {/* Brand */}
             <Link
               to="/"
@@ -59,11 +60,11 @@ export function Navbar() {
             </Link>
 
             {/* Desktop navigation */}
-            <nav className="hidden lg:flex items-center">
+            <nav className="hidden rounded-2xl lg:flex items-center">
               <div
                 className="
                   flex items-center gap-1
-                  rounded-xl
+                  rounded-2xl
                   border border-slate-200/70
                   bg-slate-100/55
                   p-1
