@@ -1,35 +1,35 @@
-import { Suspense, lazy } from 'react'
-import { Outlet, Route, Routes } from 'react-router-dom'
-import { AuthProvider } from './hooks/useAuth'
-import { ProtectedRoute } from './components/admin/ProtectedRoute'
-import { AppShell } from './components/layout/AppShell'
-import { Spinner } from './components/ui'
-import Home from './pages/Home'
-import Services from './pages/Services'
-import ServiceDetails from './pages/ServiceDetails'
-import Reservation from './pages/Reservation'
-import NotFound from './pages/NotFound'
+import { Suspense, lazy } from "react";
+import { Outlet, Route, Routes } from "react-router-dom";
+import { AuthProvider } from "./hooks/useAuth";
+import { ProtectedRoute } from "./components/admin/ProtectedRoute";
+import { AppShell } from "./components/layout/AppShell";
+import { Spinner } from "./components/ui";
+import Home from "./pages/Home";
+import Services from "./pages/Services";
+import ServiceDetails from "./pages/ServiceDetails";
+import Reservation from "./pages/Reservation";
+import NotFound from "./pages/NotFound";
 
 // Admin code is code-split so it never ships in the public homepage bundle.
-const AdminLogin = lazy(() => import('./pages/admin/Login'))
-const AdminLayout = lazy(() => import('./pages/admin/AdminLayout'))
-const AdminDashboard = lazy(() => import('./pages/admin/Dashboard'))
-const AdminReservations = lazy(() => import('./pages/admin/Reservations'))
-const AdminServices = lazy(() => import('./pages/admin/Services'))
-const AdminDepartments = lazy(() => import('./pages/admin/Departments'))
-const AdminTeam = lazy(() => import('./pages/admin/Team'))
-const AdminTestimonials = lazy(() => import('./pages/admin/Testimonials'))
-const AdminFaq = lazy(() => import('./pages/admin/Faq'))
-const AdminPatientInfo = lazy(() => import('./pages/admin/PatientInfo'))
-const AdminSettings = lazy(() => import('./pages/admin/Settings'))
+const AdminLogin = lazy(() => import("./pages/admin/Login"));
+const AdminLayout = lazy(() => import("./pages/admin/AdminLayout"));
+const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
+const AdminReservations = lazy(() => import("./pages/admin/Reservations"));
+const AdminServices = lazy(() => import("./pages/admin/Services"));
+const AdminDepartments = lazy(() => import("./pages/admin/Departments"));
+const AdminTeam = lazy(() => import("./pages/admin/Team"));
+const AdminTestimonials = lazy(() => import("./pages/admin/Testimonials"));
+const AdminFaq = lazy(() => import("./pages/admin/Faq"));
+const AdminPatientInfo = lazy(() => import("./pages/admin/PatientInfo"));
+const AdminSettings = lazy(() => import("./pages/admin/Settings"));
 
 function AdminFallback() {
   return (
     <div className="flex min-h-screen items-center justify-center">
       <Spinner />
     </div>
-  )
-}
+  );
+} // redeploy
 
 export default function App() {
   return (
@@ -72,5 +72,5 @@ export default function App() {
         </Route>
       </Routes>
     </AuthProvider>
-  )
+  );
 }
