@@ -37,7 +37,7 @@ export function Navbar() {
             rounded-[3rem]
           "
         >
-          <div className="flex h-[60px] items-center justify-between rounded-[3rem] p-9 px-2 sm:px-3">
+          <div className="flex h-[60px] items-center justify-between rounded-[3rem]  px-2 sm:px-3">
             {/* Brand */}
             <Link
               to="/"
