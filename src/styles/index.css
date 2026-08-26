@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  body {
+    font-feature-settings: 'ss01' on;
+  }
+
+  :focus-visible {
+    outline: 2px solid #1467d9;
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+}
+
+@layer components {
+  /* Liquid Glass — the single reusable surface treatment. */
+  .glass-surface {
+    background-color: rgba(255, 255, 255, 0.62);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+  }
+
+  .glass-surface-deep {
+    background-color: rgba(11, 59, 120, 0.55);
+    backdrop-filter: saturate(160%) blur(24px);
+    -webkit-backdrop-filter: saturate(160%) blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+  }
+
+  .container-page {
+    @apply mx-auto w-full max-w-[1152px] px-5 sm:px-6 lg:px-8;
+  }
+}
