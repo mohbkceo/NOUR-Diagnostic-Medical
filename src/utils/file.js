@@ -29,10 +29,10 @@ function matchesSignature(bytes, signature) {
 }
 
 export async function validateDocumentFile(file) {
-  if (!file) return { valid: false, error: 'Aucun fichier sélectionné.' }
+  if (!file) return { valid: false, code: 'missing', error: 'Aucun fichier sélectionné.' }
 
   if (file.size > MAX_FILE_SIZE_BYTES) {
-    return { valid: false, error: 'Le fichier dépasse la taille maximale de 8 Mo.' }
+    return { valid: false, code: 'size', error: 'Le fichier dépasse la taille maximale de 8 Mo.' }
   }
 
   const declaredType = ACCEPTED_TYPES[file.type]
@@ -41,6 +41,7 @@ export async function validateDocumentFile(file) {
   if (!declaredType || !declaredType.extensions.includes(extension)) {
     return {
       valid: false,
+      code: 'type',
       error: 'Format non supporté. Formats acceptés : JPG, PNG, WEBP, PDF.',
     }
   }
@@ -48,10 +49,10 @@ export async function validateDocumentFile(file) {
   try {
     const bytes = await readSignature(file, 4)
     if (!matchesSignature(bytes, declaredType.signature)) {
-      return { valid: false, error: 'Le contenu du fichier ne correspond pas à son format.' }
+      return { valid: false, code: 'signature', error: 'Le contenu du fichier ne correspond pas à son format.' }
     }
   } catch {
-    return { valid: false, error: 'Impossible de lire le fichier.' }
+    return { valid: false, code: 'read', error: 'Impossible de lire le fichier.' }
   }
 
   return { valid: true, error: null }

@@ -1,10 +1,12 @@
+import { getLocalizedField } from '../../i18n/localizedField'
+import { useLocale } from '../../i18n/LocaleProvider'
 import { Section, SectionHeading, Accordion, EmptyState } from "../ui";
 import { useSupabaseData } from "../../hooks/useSupabaseData";
 import { contentQueries } from "../../services/content";
 import { placeholderPatientInfo } from "../../data/placeholders";
-import { fr } from "../../content/fr";
 
 export function PatientInfoSection() {
+  const { copy, locale } = useLocale()
   const { data: items } = useSupabaseData(
     contentQueries.patientInfo,
     [],
@@ -20,8 +22,8 @@ export function PatientInfoSection() {
       "
     >
       <SectionHeading
-        title={fr.patientInfo.title}
-        intro={fr.patientInfo.intro}
+        title={copy.patientInfo.title}
+        intro={copy.patientInfo.intro}
         className="mb-8"
       />
 
@@ -35,7 +37,7 @@ export function PatientInfoSection() {
             backdrop-blur-xl
           "
         >
-          <EmptyState title="Aucune information pour le moment." />
+          <EmptyState title={copy.common.emptyPatientInfo} />
         </div>
       ) : (
         <div
@@ -50,8 +52,8 @@ export function PatientInfoSection() {
           <Accordion
             items={items.map((item) => ({
               id: item.id,
-              title: item.title,
-              content: item.content,
+              title: getLocalizedField(item, 'title', locale),
+              content: getLocalizedField(item, 'content', locale),
             }))}
             className="
               w-full

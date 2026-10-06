@@ -1,11 +1,13 @@
+import { getLocalizedField } from '../../i18n/localizedField'
+import { useLocale } from '../../i18n/LocaleProvider'
 import { ArrowUpRight, MessageCircle } from "lucide-react";
 import { Section, SectionHeading, Button } from "../ui";
 import { useSiteSettings } from "../../hooks/useSiteSettings";
 import { useOpeningStatus } from "../../hooks/useOpeningStatus";
-import { weekdayLabels } from "../../styles/tokens";
-import { fr } from "../../content/fr";
+import { formatWeekday } from "../../i18n/locales";
 
 export function ContactSection() {
+  const { copy, locale } = useLocale()
   const { settings } = useSiteSettings();
   const { hours, status } = useOpeningStatus();
 
@@ -38,7 +40,7 @@ export function ContactSection() {
       <div className="relative">
         {/* HEADER */}
         <div className="max-w-2xl">
-          <SectionHeading title={fr.contact.title} className="mb-0" />
+          <SectionHeading title={copy.contact.title} className="mb-0" />
         </div>
 
         {/* MAIN */}
@@ -66,7 +68,7 @@ export function ContactSection() {
           >
             <div className="max-w-lg">
               {/* Address */}
-              {settings.address ? (
+              {getLocalizedField(settings, 'address', locale) ? (
                 <div className="pb-6">
                   <p
                     className="
@@ -77,7 +79,7 @@ export function ContactSection() {
                       text-slate-400
                     "
                   >
-                    {fr.contact.address}
+                    {copy.contact.address}
                   </p>
 
                   <p
@@ -90,7 +92,7 @@ export function ContactSection() {
                       text-slate-800
                     "
                   >
-                    {settings.address}
+                    {getLocalizedField(settings, 'address', locale)}
                   </p>
 
                   {settings.address_map_url ? (
@@ -111,7 +113,7 @@ export function ContactSection() {
                         hover:text-blue-700
                       "
                     >
-                      {fr.contact.directions}
+                      {copy.contact.directions}
 
                       <ArrowUpRight
                         size={14}
@@ -139,7 +141,7 @@ export function ContactSection() {
                       text-slate-400
                     "
                   >
-                    {fr.contact.phone}
+                    {copy.contact.phone}
                   </p>
 
                   <a
@@ -208,7 +210,7 @@ export function ContactSection() {
                   text-slate-400
                 "
               >
-                {fr.contact.hours}
+                {copy.contact.hours}
               </p>
 
               <div className="flex items-center gap-2">
@@ -226,7 +228,7 @@ export function ContactSection() {
                       : "text-xs font-medium text-slate-500"
                   }
                 >
-                  {status.label}
+                  {status.isOpen ? copy.common.open : copy.common.closed}
                 </span>
               </div>
             </div>
@@ -247,7 +249,7 @@ export function ContactSection() {
                   "
                 >
                   <dt className="text-sm text-slate-500">
-                    {weekdayLabels[h.weekday]}
+                    {formatWeekday(h.weekday, locale)}
                   </dt>
 
                   <dd
@@ -255,11 +257,11 @@ export function ContactSection() {
                       text-sm
                       font-medium
                       text-slate-800
-                      text-right
+                      text-end
                     "
                   >
                     {h.is_closed
-                      ? fr.common.closed
+                      ? copy.common.closed
                       : `${h.open_time} – ${h.close_time}`}
                   </dd>
                 </div>

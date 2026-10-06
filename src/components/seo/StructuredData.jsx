@@ -2,11 +2,14 @@ import { useEffect } from 'react'
 import { useSiteSettings } from '../../hooks/useSiteSettings'
 import { useOpeningStatus } from '../../hooks/useOpeningStatus'
 import { weekdayLabels } from '../../styles/tokens'
+import { useLocale } from '../../i18n/LocaleProvider'
+import { getLocalizedField, getSiteDisplayName } from '../../i18n/localizedField'
 
 // Injects a MedicalClinic JSON-LD block built from live site_settings /
 // opening_hours data — never hardcoded — so it can never assert facts
 // (address, phone, hours) that haven't actually been set in Admin yet.
 export function StructuredData() {
+  const { locale, copy } = useLocale()
   const { settings } = useSiteSettings()
   const { hours } = useOpeningStatus()
 
@@ -23,10 +26,10 @@ export function StructuredData() {
     const data = {
       '@context': 'https://schema.org',
       '@type': 'MedicalClinic',
-      name: settings.site_name,
+      name: getSiteDisplayName(settings, locale, copy),
       telephone: settings.phone || undefined,
       email: settings.email || undefined,
-      address: settings.address || undefined,
+      address: getLocalizedField(settings, 'address', locale) || undefined,
       openingHoursSpecification: openingHoursSpecification.length ? openingHoursSpecification : undefined,
     }
 
@@ -39,7 +42,7 @@ export function StructuredData() {
     return () => {
       script.remove()
     }
-  }, [settings, hours])
+  }, [settings, hours, locale, copy])
 
   return null
 }

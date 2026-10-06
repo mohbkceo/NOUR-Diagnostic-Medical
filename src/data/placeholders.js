@@ -3,7 +3,7 @@
 // supabase/migrations) so swapping in real data later requires no
 // component changes. Every field here is editable from /admin.
 
-export const placeholderSiteSettings = {
+const baseSiteSettings = {
   site_name: 'NOUR Diagnostic Medical',
   logo_url: null,
   phone: '+213 000 00 00 00',
@@ -26,7 +26,7 @@ export const placeholderOpeningHours = [
   { weekday: 6, open_time: '08:00', close_time: '17:00', is_closed: false },
 ]
 
-export const placeholderDepartments = [
+const baseDepartments = [
   {
     id: 'dept-imagerie',
     name: 'Imagerie médicale',
@@ -53,7 +53,7 @@ export const placeholderDepartments = [
   },
 ]
 
-export const placeholderServices = [
+const baseServices = [
   {
     id: 'srv-1',
     department_id: 'dept-imagerie',
@@ -108,7 +108,7 @@ export const placeholderServices = [
   },
 ]
 
-export const placeholderTeam = [
+const baseTeam = [
   {
     id: 'team-1',
     name: 'Dr. Nom Prénom',
@@ -131,7 +131,7 @@ export const placeholderTeam = [
   },
 ]
 
-export const placeholderTestimonials = [
+const baseTestimonials = [
   {
     id: 'tst-1',
     patient_name: 'S. M.',
@@ -150,7 +150,7 @@ export const placeholderTestimonials = [
   },
 ]
 
-export const placeholderFaqs = [
+const baseFaqs = [
   {
     id: 'faq-1',
     question: 'Faut-il un rendez-vous pour une analyse ?',
@@ -171,7 +171,7 @@ export const placeholderFaqs = [
   },
 ]
 
-export const placeholderPatientInfo = [
+const basePatientInfo = [
   {
     id: 'pi-1',
     title: 'Se munir de sa prescription',
@@ -190,10 +190,41 @@ export const placeholderPatientInfo = [
   },
 ]
 
-export const placeholderAbout = {
+const baseAbout = {
   title: 'NOUR Diagnostic Medical',
   content:
     'NOUR réunit imagerie médicale, laboratoire d’analyses et examens spécialisés au sein d’un même centre, pour un parcours de diagnostic clair et coordonné.',
   image_path: null,
   facts: [],
 }
+
+// One record per entity, with both language variants and legacy French values.
+export const placeholderSiteSettings = { ...baseSiteSettings, address_fr: baseSiteSettings.address, address_ar: 'العنوان قيد التحديث — الإدارة > الإعدادات' }
+export const placeholderDepartments = baseDepartments.map((row, index) => ({ ...row,
+  name_fr: row.name, name_ar: ['التصوير الطبي', 'مختبر التحاليل الطبية', 'الفحوص المتخصصة'][index],
+  description_fr: row.description, description_ar: ['فحوص التصوير التشخيصي حسب الحاجة.', 'تحاليل طبية بدقة وعناية.', 'فحوص طبية متخصصة بموعد مسبق.'][index],
+}))
+export const placeholderServices = baseServices.map((row, index) => ({ ...row,
+  name_fr: row.name, name_ar: ['الأشعة', 'التصوير بالموجات فوق الصوتية', 'التحاليل الطبية', 'الفحوص المتخصصة'][index],
+  short_description_fr: row.short_description, short_description_ar: ['فحوص أشعة تشخيصية أساسية.', 'فحوص تشخيصية بالموجات فوق الصوتية.', 'تحاليل الدم والفحوص المخبرية الشائعة.', 'فحوص متخصصة وفق وصفة طبية.'][index],
+  preparation_info_fr: row.preparation_info, preparation_info_ar: ['لا يتطلب تحضيرًا خاصًا إلا إذا أُبلغتم بخلاف ذلك.', 'يختلف التحضير حسب المنطقة المفحوصة.', 'قد يلزم الصيام لبعض التحاليل.', 'يرجى إحضار الوصفة الطبية.'][index],
+}))
+export const placeholderTeam = baseTeam.map((row, index) => ({ ...row,
+  specialty_fr: row.specialty, specialty_ar: ['الأشعة', 'التحاليل الطبية'][index],
+  title_fr: row.title, title_ar: ['طبيب أشعة', 'طبيب تحاليل طبية'][index],
+  bio_fr: row.bio, bio_ar: '',
+}))
+export const placeholderTestimonials = baseTestimonials.map((row, index) => ({ ...row,
+  quote_fr: row.quote, quote_ar: ['استقبال سريع وطاقم يهتم بالمرضى.', 'وصلت النتائج بسرعة وكانت الخدمة احترافية.'][index],
+}))
+export const placeholderFaqs = baseFaqs.map((row, index) => ({ ...row,
+  question_fr: row.question, question_ar: ['هل يلزم حجز موعد لإجراء تحليل؟', 'ما الوثائق التي ينبغي إحضارها؟'][index],
+  answer_fr: row.answer, answer_ar: ['تُجرى بعض التحاليل دون موعد، بينما تتطلب تحاليل أخرى موعدًا مسبقًا. راجعوا صفحة الخدمة لمعرفة التفاصيل.', 'يرجى إحضار الوصفة الطبية وبطاقة الهوية وأي فحوص سابقة ذات صلة.'][index],
+}))
+export const placeholderPatientInfo = basePatientInfo.map((row, index) => ({ ...row,
+  title_fr: row.title, title_ar: ['إحضار الوصفة الطبية', 'الصيام عند الحاجة'][index],
+  content_fr: row.content, content_ar: ['يرجى تقديم وصفة الطبيب عند زيارتكم.', 'تتطلب بعض التحاليل الصيام لمدة تتراوح بين 8 و12 ساعة.'][index],
+}))
+export const placeholderAbout = { ...baseAbout, title_fr: baseAbout.title, title_ar: 'نور للتشخيص الطبي',
+  content_fr: baseAbout.content, content_ar: 'يجمع مركز نور التصوير الطبي والتحاليل الطبية والفحوص المتخصصة في مكان واحد، لتجربة تشخيص واضحة ومنسقة.',
+  facts_fr: baseAbout.facts, facts_ar: [] }

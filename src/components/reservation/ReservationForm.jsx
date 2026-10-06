@@ -1,4 +1,6 @@
-import { useState } from 'react'
+import { getLocalizedField } from '../../i18n/localizedField'
+import { useLocale } from '../../i18n/LocaleProvider'
+import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { CheckCircle2, MessageCircle } from 'lucide-react'
 import { Field, Input, Select, Textarea, Button, Spinner } from '../ui'
@@ -11,7 +13,6 @@ import { placeholderServices } from '../../data/placeholders'
 import { uploadReservationDocument, submitReservation } from '../../services/reservations'
 import { validateReservation, hasErrors, LIMITS } from '../../utils/validation'
 import { getSubmitCooldownRemaining, markSubmitted } from '../../utils/rateLimit'
-import { fr } from '../../content/fr'
 
 const initialValues = {
   fullName: '',
@@ -23,6 +24,7 @@ const initialValues = {
 }
 
 export function ReservationForm() {
+  const { copy, locale } = useLocale()
   const location = useLocation()
   const { settings } = useSiteSettings()
   const { data: services } = useSupabaseData(contentQueries.services, [], placeholderServices)
@@ -38,13 +40,19 @@ export function ReservationForm() {
   const [status, setStatus] = useState('idle') // idle | submitting | success | error
   const [errorMessage, setErrorMessage] = useState(null)
 
+  useEffect(() => {
+    setErrors({})
+    setFileError(null)
+    setErrorMessage(null)
+  }, [locale])
+
   function setField(name, value) {
     setValues((v) => ({ ...v, [name]: value }))
   }
 
   const whatsappHref = settings.whatsapp
     ? `https://wa.me/${settings.whatsapp.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
-        `Bonjour, je souhaite confirmer ma demande de rendez-vous (${values.fullName}).`
+        `${copy.reservation.whatsappMessage} (${values.fullName}).`
       )}`
     : null
 
@@ -54,14 +62,14 @@ export function ReservationForm() {
 
     const cooldown = getSubmitCooldownRemaining()
     if (cooldown > 0) {
-      setErrorMessage('Veuillez patienter avant de soumettre une nouvelle demande.')
+      setErrorMessage(copy.reservation.cooldown)
       return
     }
 
-    const validationErrors = validateReservation(values)
+    const validationErrors = validateReservation(values, copy.reservation.validation)
     if (fileError) validationErrors.document = fileError
     if (import.meta.env.VITE_TURNSTILE_SITE_KEY && !turnstileToken) {
-      validationErrors.turnstile = 'Veuillez compléter la vérification de sécurité.'
+      validationErrors.turnstile = copy.reservation.security
     }
 
     setErrors(validationErrors)
@@ -89,7 +97,8 @@ export function ReservationForm() {
       setStatus('success')
     } catch (err) {
       setStatus('error')
-      setErrorMessage(err?.message || "Une erreur est survenue. Veuillez réessayer.")
+      if (import.meta.env.DEV) console.warn('[reservation]', err)
+      setErrorMessage(copy.reservation.error)
     }
   }
 
@@ -97,12 +106,12 @@ export function ReservationForm() {
     return (
       <div className="rounded-lg border border-line bg-white p-8 text-center">
         <CheckCircle2 className="mx-auto text-emerald-600" size={32} />
-        <h2 className="mt-4 text-xl font-semibold text-ink">{fr.reservation.success.title}</h2>
-        <p className="mt-2 text-ink-soft">{fr.reservation.success.text}</p>
+        <h2 className="mt-4 text-xl font-semibold text-ink">{copy.reservation.success.title}</h2>
+        <p className="mt-2 text-ink-soft">{copy.reservation.success.text}</p>
         {whatsappHref ? (
           <Button as="a" href={whatsappHref} target="_blank" rel="noreferrer" variant="outline" className="mt-6">
             <MessageCircle size={16} />
-            {fr.reservation.success.whatsapp}
+            {copy.reservation.success.whatsapp}
           </Button>
         ) : null}
       </div>
@@ -111,9 +120,9 @@ export function ReservationForm() {
 
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-5">
-      <p className="rounded-md bg-primary-50 px-4 py-3 text-sm text-primary-700">{fr.reservation.intro}</p>
+      <p className="rounded-md bg-primary-50 px-4 py-3 text-sm text-primary-700">{copy.reservation.intro}</p>
 
-      <Field label={fr.reservation.fields.fullName} htmlFor="fullName" required error={errors.fullName}>
+      <Field label={copy.reservation.fields.fullName} htmlFor="fullName" required error={errors.fullName}>
         <Input
           id="fullName"
           value={values.fullName}
@@ -124,7 +133,7 @@ export function ReservationForm() {
         />
       </Field>
 
-      <Field label={fr.reservation.fields.phone} htmlFor="phone" required error={errors.phone}>
+      <Field label={copy.reservation.fields.phone} htmlFor="phone" required error={errors.phone}>
         <Input
           id="phone"
           type="tel"
@@ -136,24 +145,24 @@ export function ReservationForm() {
         />
       </Field>
 
-      <Field label={fr.reservation.fields.service} htmlFor="serviceId" required error={errors.serviceId}>
+      <Field label={copy.reservation.fields.service} htmlFor="serviceId" required error={errors.serviceId}>
         <Select
           id="serviceId"
           value={values.serviceId}
           onChange={(e) => setField('serviceId', e.target.value)}
           invalid={Boolean(errors.serviceId)}
         >
-          <option value="">Sélectionner…</option>
+          <option value="">{copy.reservation.selectService}</option>
           {(services ?? []).map((s) => (
             <option key={s.id} value={s.id}>
-              {s.name}
+              {getLocalizedField(s, 'name', locale)}
             </option>
           ))}
         </Select>
       </Field>
 
       <div className="grid gap-5 sm:grid-cols-2">
-        <Field label={fr.reservation.fields.preferredDate} htmlFor="preferredDate" required error={errors.preferredDate}>
+        <Field label={copy.reservation.fields.preferredDate} htmlFor="preferredDate" required error={errors.preferredDate}>
           <Input
             id="preferredDate"
             type="date"
@@ -163,7 +172,7 @@ export function ReservationForm() {
             invalid={Boolean(errors.preferredDate)}
           />
         </Field>
-        <Field label={fr.reservation.fields.preferredTime} htmlFor="preferredTime" required error={errors.preferredTime}>
+        <Field label={copy.reservation.fields.preferredTime} htmlFor="preferredTime" required error={errors.preferredTime}>
           <Input
             id="preferredTime"
             type="time"
@@ -174,11 +183,11 @@ export function ReservationForm() {
         </Field>
       </div>
 
-      <Field label={fr.reservation.fields.document}>
+      <Field label={copy.reservation.fields.document}>
         <DocumentUpload file={file} onChange={setFile} error={fileError} setError={setFileError} />
       </Field>
 
-      <Field label={fr.reservation.fields.message} htmlFor="message" error={errors.message}>
+      <Field label={copy.reservation.fields.message} htmlFor="message" error={errors.message}>
         <Textarea
           id="message"
           value={values.message}
@@ -199,7 +208,7 @@ export function ReservationForm() {
 
       <Button type="submit" size="lg" className="w-full" disabled={status === 'submitting'}>
         {status === 'submitting' ? <Spinner size={16} /> : null}
-        {status === 'submitting' ? fr.reservation.submitting : fr.reservation.submit}
+        {status === 'submitting' ? copy.reservation.submitting : copy.reservation.submit}
       </Button>
     </form>
   )

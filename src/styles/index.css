@@ -25,6 +25,10 @@
     font-feature-settings: 'ss01' on;
   }
 
+  html[lang='ar'] body {
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+  }
+
   :focus-visible {
     outline: 2px solid #1467d9;
     outline-offset: 2px;

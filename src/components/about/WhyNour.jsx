@@ -1,7 +1,8 @@
+import { useLocale } from '../../i18n/LocaleProvider'
 import { Section, SectionHeading } from "../ui";
-import { fr } from "../../content/fr";
 
 export function WhyNour() {
+  const { copy } = useLocale()
   return (
     <Section
       tone="muted"
@@ -37,11 +38,11 @@ export function WhyNour() {
                 text-blue-600
               "
             >
-              Pourquoi nous
+              {copy.whyNour.eyebrow}
             </span>
           </div>
 
-          <SectionHeading title={fr.whyNour.title} className="mb-0" />
+          <SectionHeading title={copy.whyNour.title} className="mb-0" />
         </div>
 
         {/* FEATURES */}
@@ -58,7 +59,7 @@ export function WhyNour() {
             lg:grid-cols-4
           "
         >
-          {fr.whyNour.points.map((point, index) => (
+          {copy.whyNour.points.map((point, index) => (
             <article
               key={point.title}
               className="
@@ -79,7 +80,7 @@ export function WhyNour() {
                   aria-hidden
                   className="
                     absolute
-                    left-0
+                    start-0
                     top-6
                     hidden
                     h-[calc(100%-3rem)]
@@ -127,14 +128,14 @@ export function WhyNour() {
               </p>
 
               {/* Mobile separator */}
-              {index < fr.whyNour.points.length - 1 ? (
+              {index < copy.whyNour.points.length - 1 ? (
                 <div
                   aria-hidden
                   className="
                     absolute
                     bottom-0
-                    left-6
-                    right-6
+                    start-6
+                    end-6
                     h-px
                     bg-slate-200/80
                     sm:hidden

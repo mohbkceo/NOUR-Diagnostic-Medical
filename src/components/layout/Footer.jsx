@@ -1,13 +1,16 @@
+import { getLocalizedField, getSiteDisplayName } from '../../i18n/localizedField'
+import { useLocale } from '../../i18n/LocaleProvider'
 import { Link } from "react-router-dom";
 import { ArrowUpRight, Facebook, Instagram } from "lucide-react";
 
 import { Container } from "../ui";
 import { useSiteSettings } from "../../hooks/useSiteSettings";
-import { fr } from "../../content/fr";
 
 export function Footer() {
+  const { copy, locale } = useLocale()
   const { settings } = useSiteSettings();
   const year = new Date().getFullYear();
+  const siteName = getSiteDisplayName(settings, locale, copy);
 
   const socials = [
     {
@@ -68,11 +71,11 @@ export function Footer() {
                 transition-opacity
                 hover:opacity-85
               "
-              aria-label={settings.site_name ?? fr.brand.name}
+              aria-label={siteName}
             >
               <img
                 src="/logo-white.png"
-                alt={settings.site_name ?? fr.brand.name}
+                alt={siteName}
                 className="h-12 w-auto object-contain"
               />
             </Link>
@@ -86,7 +89,7 @@ export function Footer() {
                 text-white/55
               "
             >
-              {settings.site_name}
+              {siteName}
             </p>
           </div>
 
@@ -113,7 +116,7 @@ export function Footer() {
                   text-white/40
                 "
               >
-                {fr.nav.contact}
+                {copy.nav.contact}
               </p>
 
               <div className="space-y-2.5 text-sm">
@@ -131,7 +134,7 @@ export function Footer() {
                   </a>
                 ) : null}
 
-                {settings.address ? (
+                {getLocalizedField(settings, 'address', locale) ? (
                   <span
                     className="
                       block
@@ -140,7 +143,7 @@ export function Footer() {
                       text-white/45
                     "
                   >
-                    {settings.address}
+                    {getLocalizedField(settings, 'address', locale)}
                   </span>
                 ) : null}
               </div>
@@ -158,13 +161,13 @@ export function Footer() {
                   text-white/40
                 "
               >
-                {fr.services.title}
+                {copy.services.title}
               </p>
 
               <div className="space-y-2.5 text-sm text-white/65">
-                <p>{fr.services.categories.imagerie}</p>
-                <p>{fr.services.categories.laboratoire}</p>
-                <p>{fr.services.categories.examens}</p>
+                <p>{copy.services.categories.imagerie}</p>
+                <p>{copy.services.categories.laboratoire}</p>
+                <p>{copy.services.categories.examens}</p>
               </div>
             </div>
 
@@ -180,7 +183,7 @@ export function Footer() {
                   text-white/40
                 "
               >
-                Liens
+                {copy.footer.links}
               </p>
 
               <div className="space-y-2.5">
@@ -197,7 +200,7 @@ export function Footer() {
                     hover:text-white
                   "
                 >
-                  {fr.nav.cta}
+                  {copy.nav.cta}
 
                   <ArrowUpRight
                     size={13}
@@ -253,7 +256,7 @@ export function Footer() {
           "
         >
           <p>
-            © {year} {settings.site_name}. {fr.footer.rights}
+            © {year} {siteName}. {copy.footer.rights}
           </p>
 
           <Link

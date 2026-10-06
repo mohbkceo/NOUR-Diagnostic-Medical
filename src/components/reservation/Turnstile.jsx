@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef } from 'react'
+import { useLocale } from '../../i18n/LocaleProvider'
 
 const SCRIPT_SRC = 'https://challenges.cloudflare.com/turnstile/v0/api.js'
 let scriptPromise = null
@@ -26,6 +27,7 @@ function loadTurnstileScript() {
  * rejects missing/invalid tokens server-side.
  */
 export function Turnstile({ onVerify, onExpire }) {
+  const { copy } = useLocale()
   const siteKey = import.meta.env.VITE_TURNSTILE_SITE_KEY
   const containerRef = useRef(null)
   const widgetIdRef = useRef(null)
@@ -57,7 +59,7 @@ export function Turnstile({ onVerify, onExpire }) {
   if (!siteKey) {
     return (
       <p className="text-xs text-ink-soft">
-        Vérification anti-robot désactivée (VITE_TURNSTILE_SITE_KEY absente en développement).
+        {copy.common.turnstileDisabled}
       </p>
     )
   }

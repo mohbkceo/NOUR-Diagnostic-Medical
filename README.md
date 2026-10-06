@@ -45,7 +45,8 @@ src/
   pages/            Home, Services, ServiceDetails, Reservation, NotFound
   pages/admin/      Login, AdminLayout, Dashboard, Reservations, Services,
                     Departments, Team, Testimonials, Faq, PatientInfo, Settings
-  content/fr.js     Central French UI copy (swap/extend for future locales)
+  content/fr.js, ar.js  French and Arabic fallback UI copy
+  i18n/             Locale provider, weekday and entity field helpers
   data/placeholders.js  Fallback content shaping every table's shape
   hooks/            useAuth, useSupabaseData, useSiteSettings, useOpeningStatus, …
   services/         content.js (public reads), admin.js (CRUD), reservations.js,
@@ -91,7 +92,8 @@ it ships in the public homepage bundle.
 
 1. Create a Supabase project.
 2. Run the SQL in `supabase/migrations/` **in order** (SQL editor or `supabase db push`
-   if using the CLI): `0001_schema.sql`, `0002_rls.sql`, `0003_storage.sql`, `0004_seed.sql`.
+   if using the CLI): `0001_schema.sql`, `0002_rls.sql`, `0003_storage.sql`, `0004_seed.sql`,
+   `0005_bilingual_content.sql`. Existing deployments should apply only `0005`.
 3. Create your admin user in **Authentication → Users** (email/password), then
    promote it from the SQL editor:
    ```sql
@@ -115,6 +117,23 @@ it ships in the public homepage bundle.
 `patient_info`, `reservations`, `reservation_rate_limits`, `admins`. Enums:
 `reservation_status` (new/reviewing/confirmed/completed/cancelled),
 `service_category` (imagerie/laboratoire/examens), `patient_info_category`.
+
+### Bilingual content
+
+Public visitors can switch between French and Arabic in the navigation. The
+choice is saved under `nour_locale`; Arabic sets the document to `lang="ar"`
+and `dir="rtl"`. Each content row contains both translations. Canonical slugs,
+reservations, contact details, opening hours, and admin authentication remain
+shared. Public fields fall back to the legacy French value when a translation
+is empty. Site-wide copy uses Arabic/French source strings if a `site_content`
+override is absent.
+
+Admins edit entity translations in the language tabs on each content page.
+The `/admin/site-content` page edits site-wide copy by section. Settings
+contains localized address, About text, and About facts. French fields that
+were previously required remain required; Arabic can be filled later. Apply
+`0005_bilingual_content.sql` before deploying this frontend. The migration
+backfills French columns and retains legacy columns for existing clients.
 
 Storage buckets: `reservation-documents` (private, anon can only INSERT,
 only admins can read/delete, 8MB limit, MIME-restricted at the bucket level)

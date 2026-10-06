@@ -1,8 +1,9 @@
 // Read-only queries for public content. Every function takes the shared
 // supabase client (so it can be used directly with useSupabaseData) and
-// only ever selects rows that RLS already scopes to "active" / public data.
+// only ever selects rows that RLS already scopes to active or public data.
 
 export const contentQueries = {
+  siteContent: (client) => client.from('site_content').select('key,value_fr,value_ar'),
   siteSettings: (client) => client.from('site_settings').select('*').single(),
 
   openingHours: (client) => client.from('opening_hours').select('*').order('weekday'),

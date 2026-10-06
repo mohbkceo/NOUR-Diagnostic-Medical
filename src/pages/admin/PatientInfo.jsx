@@ -1,3 +1,4 @@
+import { getLocalizedField } from '../../i18n/localizedField'
 import { CrudManager } from '../../components/admin/CrudManager'
 import { patientInfoAdmin } from '../../services/admin'
 
@@ -13,11 +14,11 @@ export default function AdminPatientInfo() {
     <CrudManager
       title="Informations patients"
       crud={patientInfoAdmin}
-      getTitle={(p) => p.title}
+      getTitle={(p) => getLocalizedField(p, 'title', 'fr')}
       getSubtitle={(p) => categories.find((c) => c.value === p.category)?.label}
       fields={[
-        { name: 'title', label: 'Titre', type: 'text', required: true },
-        { name: 'content', label: 'Contenu', type: 'textarea', required: true },
+        { name: 'title', localized: true, label: { fr: 'Titre', ar: 'العنوان' }, type: 'text', required: true },
+        { name: 'content', localized: true, label: { fr: 'Contenu', ar: 'المحتوى' }, type: 'textarea', required: true },
         { name: 'category', label: 'Catégorie', type: 'select', options: categories },
       ]}
     />

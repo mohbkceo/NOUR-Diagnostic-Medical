@@ -27,6 +27,7 @@ export function GlassSheet({ open, onClose, side = 'bottom', title, children, cl
   const positionClasses = {
     bottom: 'inset-x-0 bottom-0 rounded-t-lg rounded-b-none max-h-[85vh]',
     right: 'inset-y-0 right-0 h-full w-full max-w-md rounded-none',
+    left: 'inset-y-0 left-0 h-full w-full max-w-md rounded-none',
     center: 'inset-0 m-auto h-fit max-h-[85vh] w-[min(92vw,560px)]',
   }
 

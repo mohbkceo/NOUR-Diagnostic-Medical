@@ -1,9 +1,12 @@
+import { getLocalizedField } from '../../i18n/localizedField'
+import { useLocale } from '../../i18n/LocaleProvider'
 import { Section } from "../ui";
 import { useSupabaseData } from "../../hooks/useSupabaseData";
 import { contentQueries } from "../../services/content";
 import { placeholderAbout } from "../../data/placeholders";
 
 export function AboutSection() {
+  const { copy, locale } = useLocale();
   const { data: about } = useSupabaseData(
     contentQueries.about,
     [],
@@ -11,6 +14,12 @@ export function AboutSection() {
   );
 
   const content = about ?? placeholderAbout;
+  const factsFr = content.facts_fr ?? content.facts ?? [];
+  const factsAr = content.facts_ar ?? [];
+  const facts = factsFr.map((fact, index) => ({
+    label: locale === 'ar' ? factsAr[index]?.label || fact.label : fact.label,
+    value: locale === 'ar' ? factsAr[index]?.value || fact.value : fact.value,
+  }));
 
   return (
     <Section
@@ -53,7 +62,7 @@ export function AboutSection() {
                 text-blue-600
               "
             >
-              À propos
+              {copy.about.eyebrow}
             </span>
           </div>
 
@@ -68,7 +77,7 @@ export function AboutSection() {
               lg:text-[3.25rem]
             "
           >
-            {content.title}
+            {getLocalizedField(content, 'title', locale)}
           </h2>
 
           <p
@@ -81,11 +90,11 @@ export function AboutSection() {
               sm:text-lg
             "
           >
-            {content.content}
+            {getLocalizedField(content, 'content', locale)}
           </p>
 
           {/* FACTS */}
-          {content.facts?.length ? (
+          {facts.length ? (
             <div
               className="
                 mt-9
@@ -101,12 +110,12 @@ export function AboutSection() {
                 backdrop-blur-xl
               "
             >
-              {content.facts.map((fact, index) => (
+              {facts.map((fact, index) => (
                 <div
                   key={fact.label}
                   className={[
                     "min-w-[120px] px-4 py-3.5 sm:px-5",
-                    index !== 0 ? "border-l border-slate-200/70" : "",
+                    index !== 0 ? "border-s border-slate-200/70" : "",
                   ].join(" ")}
                 >
                   <dt
@@ -157,7 +166,7 @@ export function AboutSection() {
             <>
               <img
                 src={content.image_path}
-                alt={content.title}
+                alt={getLocalizedField(content, 'title', locale)}
                 className="
                   absolute inset-0
                   h-full w-full
@@ -187,7 +196,7 @@ export function AboutSection() {
               <div
                 className="
                   absolute
-                  bottom-4 left-4
+                  bottom-4 start-4
                   rounded-full
                   border border-white/70
                   bg-white/60
@@ -199,7 +208,7 @@ export function AboutSection() {
                   shadow-xs
                 "
               >
-                {content.title}
+                {getLocalizedField(content, 'title', locale)}
               </div>
             </>
           ) : (
@@ -215,7 +224,7 @@ export function AboutSection() {
                 text-blue-700/50
               "
             >
-              <img src="/about.jpg" alt="About-image" />
+              <img src="/about.jpg" alt={copy.about.title} />
             </div>
           )}
         </div>

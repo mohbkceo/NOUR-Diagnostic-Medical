@@ -1,10 +1,12 @@
-// Central UI copy. Components import from here instead of hardcoding
-// strings, so a future locale (e.g. `ar.js`) can be dropped in and switched
-// via a LocaleProvider without touching component code.
+// French fallback copy. Database site_content may override string leaves.
 export const fr = {
   brand: {
     name: 'NOUR',
     tagline: 'Diagnostic Medical',
+  },
+  seo: {
+    title: 'NOUR Diagnostic Medical — Imagerie, Laboratoire, Examens spécialisés',
+    description: "NOUR Diagnostic Medical : imagerie médicale, laboratoire d'analyses médicales et examens spécialisés. Prenez rendez-vous en ligne simplement et en toute confiance.",
   },
   nav: {
     services: 'Services',
@@ -13,6 +15,7 @@ export const fr = {
     faq: 'FAQ',
     contact: 'Contact',
     cta: 'Prendre rendez-vous',
+    openMenu: 'Ouvrir le menu',
   },
   hero: {
     eyebrow: 'Centre de diagnostic médical',
@@ -32,6 +35,7 @@ export const fr = {
   },
   whyNour: {
     title: 'Pourquoi NOUR',
+    eyebrow: 'Pourquoi nous',
     points: [
       { title: 'Expertise', text: 'Une équipe qualifiée et expérimentée.' },
       { title: 'Prise en charge', text: 'Un accueil attentif à chaque étape.' },
@@ -45,6 +49,7 @@ export const fr = {
   },
   about: {
     title: 'À propos de NOUR',
+    eyebrow: 'À propos',
   },
   team: {
     title: 'Notre équipe médicale',
@@ -90,6 +95,29 @@ export const fr = {
     },
     submit: 'Envoyer la demande',
     submitting: 'Envoi en cours…',
+    selectService: 'Sélectionner…',
+    cooldown: 'Veuillez patienter avant de soumettre une nouvelle demande.',
+    security: 'Veuillez compléter la vérification de sécurité.',
+    error: 'Une erreur est survenue. Veuillez réessayer.',
+    whatsappMessage: 'Bonjour, je souhaite confirmer ma demande de rendez-vous',
+    validation: {
+      fullNameRequired: 'Le nom complet est requis.',
+      fullNameLength: 'Le nom doit contenir entre 2 et 80 caractères.',
+      phoneRequired: 'Le numéro de téléphone est requis.',
+      phoneInvalid: 'Numéro de téléphone invalide.',
+      serviceRequired: 'Veuillez sélectionner un service.',
+      dateRequired: 'Veuillez choisir une date.',
+      dateFuture: 'La date doit être future.',
+      timeRequired: 'Veuillez choisir un horaire.',
+      messageLength: 'Le message est limité à 500 caractères.',
+    },
+    upload: {
+      checking: 'Vérification…',
+      add: 'Ajouter un document ou une image',
+      hint: 'JPG, PNG, WEBP ou PDF — 8 Mo max',
+      remove: 'Retirer le fichier',
+      errors: { missing: 'Aucun fichier sélectionné.', size: 'Le fichier dépasse la taille maximale de 8 Mo.', type: 'Format non supporté. Formats acceptés : JPG, PNG, WEBP, PDF.', signature: 'Le contenu du fichier ne correspond pas à son format.', read: 'Impossible de lire le fichier.' },
+    },
     success: {
       title: 'Demande envoyée',
       text: 'Votre demande a bien été enregistrée. Notre équipe vous contactera pour la confirmer.',
@@ -105,6 +133,7 @@ export const fr = {
   },
   footer: {
     rights: 'Tous droits réservés.',
+    links: 'Liens',
   },
   common: {
     open: 'Ouvert',
@@ -114,5 +143,15 @@ export const fr = {
     emptyTestimonials: 'Aucun témoignage pour le moment.',
     emptyFaq: 'Aucune question pour le moment.',
     emptyTeam: 'Aucun membre à afficher pour le moment.',
+    emptyPatientInfo: 'Aucune information pour le moment.',
+    serviceNotFound: 'Service introuvable.',
+    backToServices: 'Retour aux services',
+    allServices: 'Tous les services',
+    appointmentRequired: 'Rendez-vous requis',
+    preparation: 'Préparation',
+    pageNotFound: 'Page introuvable',
+    backHome: 'Retour à l’accueil',
+    close: 'Fermer',
+    turnstileDisabled: 'Vérification anti-robot désactivée en développement.',
   },
 }

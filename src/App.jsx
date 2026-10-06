@@ -22,6 +22,7 @@ const AdminTestimonials = lazy(() => import("./pages/admin/Testimonials"));
 const AdminFaq = lazy(() => import("./pages/admin/Faq"));
 const AdminPatientInfo = lazy(() => import("./pages/admin/PatientInfo"));
 const AdminSettings = lazy(() => import("./pages/admin/Settings"));
+const AdminSiteContent = lazy(() => import("./pages/admin/SiteContent"));
 
 function AdminFallback() {
   return (
@@ -68,6 +69,7 @@ export default function App() {
             <Route path="faq" element={<AdminFaq />} />
             <Route path="patient-info" element={<AdminPatientInfo />} />
             <Route path="settings" element={<AdminSettings />} />
+            <Route path="site-content" element={<AdminSiteContent />} />
           </Route>
         </Route>
       </Routes>

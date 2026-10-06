@@ -1,8 +1,10 @@
 import { useRef, useState } from 'react'
 import { Upload, X, FileText } from 'lucide-react'
 import { ACCEPT_ATTR, formatFileSize, validateDocumentFile } from '../../utils/file'
+import { useLocale } from '../../i18n/LocaleProvider'
 
 export function DocumentUpload({ file, onChange, error, setError }) {
+  const { copy } = useLocale()
   const inputRef = useRef(null)
   const [checking, setChecking] = useState(false)
 
@@ -13,7 +15,7 @@ export function DocumentUpload({ file, onChange, error, setError }) {
     const result = await validateDocumentFile(selected)
     setChecking(false)
     if (!result.valid) {
-      setError(result.error)
+      setError(copy.reservation.upload.errors[result.code] ?? copy.reservation.error)
       onChange(null)
       return
     }
@@ -33,9 +35,9 @@ export function DocumentUpload({ file, onChange, error, setError }) {
         >
           <Upload size={20} className="text-primary" />
           <span className="text-sm font-medium text-ink">
-            {checking ? 'Vérification…' : 'Ajouter un document ou une image'}
+            {checking ? copy.reservation.upload.checking : copy.reservation.upload.add}
           </span>
-          <span className="text-xs text-ink-soft">JPG, PNG, WEBP ou PDF — 8 Mo max</span>
+          <span className="text-xs text-ink-soft">{copy.reservation.upload.hint}</span>
         </button>
       ) : (
         <div className="flex items-center justify-between gap-3 rounded-md border border-line bg-white px-4 py-3">
@@ -56,7 +58,7 @@ export function DocumentUpload({ file, onChange, error, setError }) {
           </div>
           <button
             type="button"
-            aria-label="Retirer le fichier"
+            aria-label={copy.reservation.upload.remove}
             onClick={() => onChange(null)}
             className="shrink-0 rounded-full p-1.5 text-ink-soft hover:bg-ink/5"
           >

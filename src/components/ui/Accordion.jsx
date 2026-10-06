@@ -29,7 +29,7 @@ export function Accordion({ items, className }) {
                 gap-5
                 px-5
                 py-5
-                text-left
+                text-start
                 outline-none
                 sm:px-6
                 sm:py-5.5
@@ -77,7 +77,7 @@ export function Accordion({ items, className }) {
               <div
                 className="
                   max-w-2xl
-                  pr-10
+                  pe-10
                   text-sm
                   leading-6
                   text-slate-500

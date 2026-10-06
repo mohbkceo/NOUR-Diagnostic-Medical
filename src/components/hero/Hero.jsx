@@ -1,14 +1,16 @@
+import { getLocalizedField } from '../../i18n/localizedField'
+import { useLocale } from '../../i18n/LocaleProvider'
 import { Link } from "react-router-dom";
 import { ArrowUpRight, Calendar, MessageCircle } from "lucide-react";
 
 import { Button, Container } from "../ui";
 import { useSiteSettings } from "../../hooks/useSiteSettings";
 import { useOpeningStatus } from "../../hooks/useOpeningStatus";
-import { fr } from "../../content/fr";
 
 const heroImage = "./image.jpg";
 
 export function Hero() {
+  const { copy, locale } = useLocale()
   const { settings } = useSiteSettings();
   const { status } = useOpeningStatus();
 
@@ -105,7 +107,7 @@ export function Hero() {
                     xl:text-[4.35rem]
                   "
                 >
-                  {fr.brand.name}
+                  {copy.brand.name}
                 </h1>
 
                 <p
@@ -119,7 +121,7 @@ export function Hero() {
                     sm:text-xl
                   "
                 >
-                  {fr.brand.tagline}
+                  {copy.brand.tagline}
                 </p>
 
                 <p
@@ -131,7 +133,7 @@ export function Hero() {
                     sm:text-base
                   "
                 >
-                  {fr.hero.lines.join(" · ")}
+                  {copy.hero.lines.join(" · ")}
                 </p>
               </div>
 
@@ -157,13 +159,13 @@ export function Hero() {
                   "
                 >
                   <Calendar size={16} strokeWidth={2} />
-                  {fr.hero.cta}
+                  {copy.hero.cta}
 
                   <ArrowUpRight
                     size={15}
                     strokeWidth={2}
                     className="
-                      ml-0.5
+                      ms-0.5
                       transition-transform
                       group-hover:translate-x-0.5
                       group-hover:-translate-y-0.5
@@ -195,7 +197,7 @@ export function Hero() {
                     "
                   >
                     <MessageCircle size={16} strokeWidth={2} />
-                    {fr.hero.ctaSecondary}
+                    {copy.hero.ctaSecondary}
                   </Button>
                 ) : null}
               </div>
@@ -223,11 +225,11 @@ export function Hero() {
                   </a>
                 ) : null}
 
-                {settings.phone && settings.address ? (
+                {settings.phone && getLocalizedField(settings, 'address', locale) ? (
                   <span className="text-slate-300">/</span>
                 ) : null}
 
-                {settings.address ? (
+                {getLocalizedField(settings, 'address', locale) ? (
                   <span
                     className="
                       max-w-[260px]
@@ -235,7 +237,7 @@ export function Hero() {
                       text-slate-900
                     "
                   >
-                    {settings.address}
+                    {getLocalizedField(settings, 'address', locale)}
                   </span>
                 ) : null}
               </div>
@@ -246,7 +248,7 @@ export function Hero() {
           <div
             className="
               absolute
-              right-4 top-4
+              end-4 top-4
               z-20
               hidden sm:flex
               items-center gap-2.5
@@ -272,7 +274,7 @@ export function Hero() {
                   : "text-xs font-medium text-slate-600"
               }
             >
-              {status.label}
+              {status.isOpen ? copy.common.open : copy.common.closed}
             </span>
           </div>
 
@@ -280,7 +282,7 @@ export function Hero() {
           <div
             className="
               absolute
-              bottom-4 left-4
+              bottom-4 start-4
               z-20
               flex sm:hidden
               items-center
@@ -294,7 +296,7 @@ export function Hero() {
           >
             <span
               className={[
-                "mr-2 h-1.5 w-1.5 rounded-full",
+                "me-2 h-1.5 w-1.5 rounded-full",
                 status.isOpen ? "bg-emerald-500" : "bg-slate-300",
               ].join(" ")}
             />
@@ -306,7 +308,7 @@ export function Hero() {
                   : "text-xs font-medium text-slate-600"
               }
             >
-              {status.label}
+              {status.isOpen ? copy.common.open : copy.common.closed}
             </span>
           </div>
         </div>

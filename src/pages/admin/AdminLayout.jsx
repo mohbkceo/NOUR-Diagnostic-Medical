@@ -9,6 +9,7 @@ import {
   HelpCircle,
   ClipboardList,
   Settings,
+  Languages,
   LogOut,
   Menu,
 } from "lucide-react";
@@ -57,6 +58,11 @@ const links = [
     to: "/admin/patient-info",
     label: "Infos patients",
     Icon: ClipboardList,
+  },
+  {
+    to: "/admin/site-content",
+    label: "Contenu du site",
+    Icon: Languages,
   },
 ];
 

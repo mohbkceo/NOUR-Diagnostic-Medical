@@ -1,3 +1,5 @@
+import { getLocalizedField } from '../i18n/localizedField'
+import { useLocale } from '../i18n/LocaleProvider'
 import { useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Section, SectionHeading, EmptyState } from '../components/ui'
@@ -5,9 +7,9 @@ import { ServiceRow } from '../components/services/ServiceRow'
 import { useSupabaseData } from '../hooks/useSupabaseData'
 import { contentQueries } from '../services/content'
 import { placeholderDepartments, placeholderServices } from '../data/placeholders'
-import { fr } from '../content/fr'
 
 export default function Services() {
+  const { copy, locale } = useLocale()
   const [searchParams] = useSearchParams()
   const activeDept = searchParams.get('dept')
 
@@ -29,12 +31,12 @@ export default function Services() {
 
   return (
     <Section tone="white" className="min-h-[60vh]">
-      <SectionHeading title={fr.services.title} intro={fr.services.intro} />
+      <SectionHeading title={copy.services.title} intro={copy.services.intro} />
 
       <div className="space-y-12">
         {grouped.map(({ dept, items }) => (
           <div key={dept.id}>
-            <h3 className="mb-4 text-lg font-semibold text-ink">{dept.name}</h3>
+            <h3 className="mb-4 text-lg font-semibold text-ink">{getLocalizedField(dept, 'name', locale)}</h3>
             {items.length ? (
               <div>
                 {items.map((service) => (
@@ -42,7 +44,7 @@ export default function Services() {
                 ))}
               </div>
             ) : (
-              <EmptyState title={fr.common.emptyServices} />
+              <EmptyState title={copy.common.emptyServices} />
             )}
           </div>
         ))}

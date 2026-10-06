@@ -13,44 +13,44 @@ export const LIMITS = {
 
 const PHONE_RE = /^[0-9+()\s.-]{8,20}$/
 
-export function validateReservation(values) {
+export function validateReservation(values, messages) {
   const errors = {}
 
   const fullName = (values.fullName ?? '').trim()
   if (!fullName) {
-    errors.fullName = 'Le nom complet est requis.'
+    errors.fullName = messages.fullNameRequired
   } else if (fullName.length < LIMITS.fullName.min || fullName.length > LIMITS.fullName.max) {
-    errors.fullName = `Le nom doit contenir entre ${LIMITS.fullName.min} et ${LIMITS.fullName.max} caractères.`
+    errors.fullName = messages.fullNameLength
   }
 
   const phone = (values.phone ?? '').trim()
   if (!phone) {
-    errors.phone = 'Le numéro de téléphone est requis.'
+    errors.phone = messages.phoneRequired
   } else if (!PHONE_RE.test(phone)) {
-    errors.phone = 'Numéro de téléphone invalide.'
+    errors.phone = messages.phoneInvalid
   }
 
   if (!values.serviceId) {
-    errors.serviceId = 'Veuillez sélectionner un service.'
+    errors.serviceId = messages.serviceRequired
   }
 
   if (!values.preferredDate) {
-    errors.preferredDate = 'Veuillez choisir une date.'
+    errors.preferredDate = messages.dateRequired
   } else {
     const today = new Date()
     today.setHours(0, 0, 0, 0)
     const chosen = new Date(values.preferredDate)
     if (chosen < today) {
-      errors.preferredDate = 'La date doit être future.'
+      errors.preferredDate = messages.dateFuture
     }
   }
 
   if (!values.preferredTime) {
-    errors.preferredTime = 'Veuillez choisir un horaire.'
+    errors.preferredTime = messages.timeRequired
   }
 
   if (values.message && values.message.length > LIMITS.message.max) {
-    errors.message = `Le message est limité à ${LIMITS.message.max} caractères.`
+    errors.message = messages.messageLength
   }
 
   return errors

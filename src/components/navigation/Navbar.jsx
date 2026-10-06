@@ -5,23 +5,24 @@ import { Menu, ArrowUpRight } from "lucide-react";
 import { GlassNav, GlassSheet } from "../glass";
 import { Button } from "../ui";
 import { useSiteSettings } from "../../hooks/useSiteSettings";
-import { fr } from "../../content/fr";
+import { useLocale } from "../../i18n/LocaleProvider";
+import { LanguageSwitcher } from "../language/LanguageSwitcher";
 
 const logo = "./logo.png";
 
-const links = [
-  { to: "/#services", label: fr.nav.services },
-  { to: "/#about", label: fr.nav.about },
-  { to: "/#team", label: fr.nav.team },
-  { to: "/#faq", label: fr.nav.faq },
-  { to: "/#contact", label: fr.nav.contact },
-];
-
 export function Navbar() {
+  const { copy, isRTL } = useLocale();
   const { settings } = useSiteSettings();
   const [open, setOpen] = useState(false);
+  const links = [
+    { to: "/#services", label: copy.nav.services },
+    { to: "/#about", label: copy.nav.about },
+    { to: "/#team", label: copy.nav.team },
+    { to: "/#faq", label: copy.nav.faq },
+    { to: "/#contact", label: copy.nav.contact },
+  ];
 
-  const brandName = settings.site_name?.split(" ")[0] ?? fr.brand.name;
+  const brandName = settings.site_name?.split(" ")[0] ?? copy.brand.name;
 
   return (
     <>
@@ -93,6 +94,7 @@ export function Navbar() {
 
             {/* Actions */}
             <div className="flex items-center gap-2">
+              <LanguageSwitcher />
               <Button
                 as={Link}
                 to="/rendez-vous"
@@ -111,12 +113,12 @@ export function Navbar() {
                   active:scale-[0.98]
                 "
               >
-                {fr.nav.cta}
+                {copy.nav.cta}
               </Button>
 
               <button
                 type="button"
-                aria-label="Ouvrir le menu"
+                aria-label={copy.nav.openMenu}
                 aria-expanded={open}
                 onClick={() => setOpen(true)}
                 className="
@@ -146,7 +148,7 @@ export function Navbar() {
       <GlassSheet
         open={open}
         onClose={() => setOpen(false)}
-        side="right"
+        side={isRTL ? 'left' : 'right'}
         title={brandName}
       >
         <div className="flex h-full flex-col">
@@ -187,6 +189,7 @@ export function Navbar() {
           </nav>
 
           <div className="mt-auto pt-6">
+            <LanguageSwitcher className="mb-4" />
             <div className="mb-4 h-px bg-slate-200/80" />
 
             <Button
@@ -204,7 +207,7 @@ export function Navbar() {
               "
               onClick={() => setOpen(false)}
             >
-              {fr.nav.cta}
+              {copy.nav.cta}
             </Button>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Button, Spinner } from '../../components/ui'
 import { AdminImageUpload } from '../../components/admin/AdminImageUpload'
+import { LanguageTabs } from '../../components/admin/LanguageTabs'
 import {
   getSiteSettings,
   updateSiteSettings,
@@ -11,7 +12,7 @@ import {
 } from '../../services/admin'
 import { weekdayLabels } from '../../styles/tokens'
 
-function TextField({ label, value, onChange, placeholder }) {
+function TextField({ label, value, onChange, placeholder, lang = 'fr' }) {
   return (
     <div>
       <label className="mb-1.5 block text-sm font-medium text-ink">{label}</label>
@@ -19,6 +20,8 @@ function TextField({ label, value, onChange, placeholder }) {
         className="w-full rounded-md border border-line px-3 py-2 text-sm"
         value={value ?? ''}
         placeholder={placeholder}
+        lang={lang}
+        dir={lang === 'ar' ? 'rtl' : 'ltr'}
         onChange={(e) => onChange(e.target.value)}
       />
     </div>
@@ -31,6 +34,7 @@ export default function AdminSettings() {
   const [hours, setHours] = useState(null)
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState(null)
+  const [contentLanguage, setContentLanguage] = useState('fr')
 
   useEffect(() => {
     getSiteSettings().then(setSettings)
@@ -52,6 +56,11 @@ export default function AdminSettings() {
   }
 
   async function saveAbout() {
+    if (!(about.title_fr ?? about.title ?? '').trim()) {
+      setMessage('Le titre français est requis.')
+      setContentLanguage('fr')
+      return
+    }
     setSaving(true)
     setMessage(null)
     try {
@@ -84,7 +93,10 @@ export default function AdminSettings() {
           <TextField label="Téléphone" value={settings.phone} onChange={(v) => setSettings({ ...settings, phone: v })} />
           <TextField label="Email" value={settings.email} onChange={(v) => setSettings({ ...settings, email: v })} />
           <TextField label="WhatsApp (avec indicatif)" value={settings.whatsapp} onChange={(v) => setSettings({ ...settings, whatsapp: v })} />
-          <TextField label="Adresse" value={settings.address} onChange={(v) => setSettings({ ...settings, address: v })} />
+          <div className="sm:col-span-2">
+            <LanguageTabs value={contentLanguage} onChange={setContentLanguage} />
+            <TextField label="Adresse" lang={contentLanguage} value={settings[`address_${contentLanguage}`] ?? (contentLanguage === 'fr' ? settings.address : '')} onChange={(v) => setSettings({ ...settings, [`address_${contentLanguage}`]: v })} />
+          </div>
           <TextField label="Lien Google Maps" value={settings.address_map_url} onChange={(v) => setSettings({ ...settings, address_map_url: v })} />
           <TextField label="Facebook" value={settings.facebook} onChange={(v) => setSettings({ ...settings, facebook: v })} />
           <TextField label="Instagram" value={settings.instagram} onChange={(v) => setSettings({ ...settings, instagram: v })} />
@@ -102,15 +114,42 @@ export default function AdminSettings() {
       <section>
         <h2 className="mb-4 font-medium text-ink">À propos</h2>
         <div className="space-y-4">
-          <TextField label="Titre" value={about.title} onChange={(v) => setAbout({ ...about, title: v })} />
+          <LanguageTabs value={contentLanguage} onChange={setContentLanguage} />
+          <TextField label="Titre" lang={contentLanguage} value={about[`title_${contentLanguage}`] ?? (contentLanguage === 'fr' ? about.title : '')} onChange={(v) => setAbout({ ...about, [`title_${contentLanguage}`]: v })} />
           <div>
             <label className="mb-1.5 block text-sm font-medium text-ink">Contenu</label>
             <textarea
               className="w-full rounded-md border border-line px-3 py-2 text-sm"
+              lang={contentLanguage}
+              dir={contentLanguage === 'ar' ? 'rtl' : 'ltr'}
               rows={4}
-              value={about.content ?? ''}
-              onChange={(e) => setAbout({ ...about, content: e.target.value })}
+              value={about[`content_${contentLanguage}`] ?? (contentLanguage === 'fr' ? about.content ?? '' : '')}
+              onChange={(e) => setAbout({ ...about, [`content_${contentLanguage}`]: e.target.value })}
             />
+          </div>
+          <div className="space-y-3">
+            <p className="text-sm font-medium text-ink">Chiffres et repères</p>
+            {(about.facts_fr ?? about.facts ?? []).map((_, index) => {
+              const facts = about[`facts_${contentLanguage}`] ?? (contentLanguage === 'fr' ? about.facts ?? [] : [])
+              const fact = facts[index] ?? {}
+              const change = (field, value) => {
+                const next = [...facts]
+                next[index] = { ...fact, [field]: value }
+                setAbout({ ...about, [`facts_${contentLanguage}`]: next })
+              }
+              return <div key={index} className="grid gap-3 sm:grid-cols-2" lang={contentLanguage} dir={contentLanguage === 'ar' ? 'rtl' : 'ltr'}>
+                <TextField label={`Libellé ${index + 1}`} lang={contentLanguage} value={fact.label ?? ''} onChange={(value) => change('label', value)} />
+                <TextField label={`Valeur ${index + 1}`} lang={contentLanguage} value={fact.value ?? ''} onChange={(value) => change('value', value)} />
+                <button type="button" className="text-start text-xs text-red-600" onClick={() => setAbout({ ...about,
+                  facts_fr: (about.facts_fr ?? about.facts ?? []).filter((_, itemIndex) => itemIndex !== index),
+                  facts_ar: (about.facts_ar ?? []).filter((_, itemIndex) => itemIndex !== index),
+                })}>Supprimer ce repère</button>
+              </div>
+            })}
+            <Button type="button" variant="outline" size="sm" onClick={() => {
+              const french = [...(about.facts_fr ?? about.facts ?? []), { label: '', value: '' }]
+              setAbout({ ...about, facts_fr: french })
+            }}>Ajouter un repère</Button>
           </div>
           <div>
             <label className="mb-1.5 block text-sm font-medium text-ink">Image</label>

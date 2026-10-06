@@ -1,3 +1,4 @@
+import { getLocalizedField } from '../../i18n/localizedField'
 import { CrudManager } from '../../components/admin/CrudManager'
 import { testimonialsAdmin } from '../../services/admin'
 
@@ -7,10 +8,10 @@ export default function AdminTestimonials() {
       title="Témoignages"
       crud={testimonialsAdmin}
       getTitle={(t) => t.patient_name}
-      getSubtitle={(t) => t.quote}
+      getSubtitle={(t) => getLocalizedField(t, 'quote', 'fr')}
       fields={[
         { name: 'patient_name', label: 'Nom du patient', type: 'text', required: true },
-        { name: 'quote', label: 'Témoignage', type: 'textarea', required: true },
+        { name: 'quote', localized: true, label: { fr: 'Témoignage', ar: 'الشهادة' }, type: 'textarea', required: true },
         {
           name: 'rating',
           label: 'Note',
